@@ -8,7 +8,24 @@ datasource db {
 }
 
 model User {
-  id    Int     @id @default(autoincrement())
-  email String  @unique
-  name  String?
+  id        String   @id @default(cuid())
+  email     String?
+  createdAt DateTime @default(now())
+  password  String
+  username  String   @unique
+  Auth      Auth?
+
+  @@unique([id, username])
+}
+
+model Auth {
+  id     String @id @default(cuid())
+  role   Role   @default(USER)
+  userId String @unique
+  User   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+enum Role {
+  USER
+  ADMIN
 }

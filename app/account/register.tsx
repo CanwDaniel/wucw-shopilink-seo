@@ -4,8 +4,10 @@ import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { Toaster } from "~/components/ui/sonner"
-import { useSubmit } from "react-router";
+import { useFetcher, useNavigate } from "react-router";
+import { useEffect } from "react";
+import { Toaster } from "~/components/ui/sonner";
+import { Spinner } from "~/components/ui/spinner";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import {
@@ -23,6 +25,10 @@ import {
   FieldLabel,
 } from "~/components/ui/field";
 
+// TODO: API
+import { ServerApiRegister } from "../server/users/register.api";
+
+// TODO: VALIDATE
 const formSchema = z.object({
   username: z.string()
     .min(1, "Username is required.")
@@ -50,11 +56,31 @@ const formSchema = z.object({
 export async function action({ request }: Route.ActionArgs) {
   const formData = await request.formData();
   const { username, password, email } = Object.fromEntries(formData);
-  console.log(username, password, email);
+  
+  const userdata = {
+    username: String(username),
+    password: String(password),
+    email: String(email)
+  };
+
+  const res = await ServerApiRegister(userdata);
+
+  return res;
 }
 
 export default function Register() {
-  const submit = useSubmit();
+  const fetcher = useFetcher();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if(fetcher?.data) {
+      if(fetcher.data.success) {
+        navigate("/login", { state: { username: fetcher.data.data.username } });
+      } else {
+        toast.error(fetcher?.data?.message, { position: "top-center", style: { backgroundColor: "var(--destructive)", color: "#fff"} });
+      }
+    }
+  }, [fetcher.data])
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -66,27 +92,27 @@ export default function Register() {
   });
 
   function onSubmit(data: z.infer<typeof formSchema>) {
-    toast("You submitted the following values:", {
-      description: (
-        <pre className="mt-2 w-[320px] overflow-x-auto rounded-md bg-code p-4 text-code-foreground">
-          <code>{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-      position: "bottom-right",
-      classNames: {
-        content: "flex flex-col gap-2",
-      },
-      style: {
-        "--border-radius": "calc(var(--radius)  + 4px)",
-      } as React.CSSProperties,
-    });
+    // toast("You submitted the following values:", {
+    //   description: (
+    //     <pre className="mt-2 w-[320px] overflow-x-auto rounded-md bg-code p-4 text-code-foreground">
+    //       <code>{JSON.stringify(data, null, 2)}</code>
+    //     </pre>
+    //   ),
+    //   position: "bottom-right",
+    //   classNames: {
+    //     content: "flex flex-col gap-2",
+    //   },
+    //   style: {
+    //     "--border-radius": "calc(var(--radius)  + 4px)",
+    //   } as React.CSSProperties,
+    // });
 
-    submit(data, { method: "post" });
+    fetcher.submit(data, { method: "post" });
   }
 
   return (
     <div className="h-screen flex items-center justify-center">
-      <Card className="size-max sm:min-w-sm">
+      <Card className="size-max min-w-sm">
         <CardHeader>
           <CardTitle>Register</CardTitle>
 
@@ -96,7 +122,7 @@ export default function Register() {
         </CardHeader>
 
         <CardContent>
-          <form id="form-register" onSubmit={form.handleSubmit(onSubmit)}>
+          <fetcher.Form id="form-register" onSubmit={form.handleSubmit(onSubmit)}>
             <FieldGroup>
               <Controller
                 name="username"
@@ -160,7 +186,7 @@ export default function Register() {
                 )}
               />
             </FieldGroup>
-          </form>
+          </fetcher.Form>
         </CardContent>
 
         <CardFooter>
@@ -168,8 +194,8 @@ export default function Register() {
             {/* <Button type="button" variant="outline" onClick={() => form.reset()}>
               Reset
             </Button> */}
-            <Button type="submit" form="form-register" className="cursor-pointer">
-              Sign up
+            <Button type="submit" form="form-register" className="cursor-pointer" disabled={ fetcher.state === 'submitting' }>
+              Sign up { fetcher.state === 'submitting' ? <Spinner data-icon="inline-start" /> : '' }
             </Button>
           </Field>
         </CardFooter>
