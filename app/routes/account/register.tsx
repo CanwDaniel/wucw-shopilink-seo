@@ -1,5 +1,4 @@
 import type { Route } from "./+types/register";
-import * as React from "react";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
@@ -26,7 +25,7 @@ import {
 } from "~/components/ui/field";
 
 // TODO: API
-import { ServerApiRegister } from "../server/users/register.api";
+import { ServerApiRegister } from "../../server/users/register.api";
 
 // TODO: VALIDATE
 const formSchema = z.object({

@@ -1,10 +1,9 @@
 import type { Route } from "./+types/login";
-import * as React from "react";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { useFetcher, useNavigate, useLocation } from "react-router";
+import { useFetcher, useLocation, redirect, Link } from "react-router";
 import { useEffect } from "react";
 import { Toaster } from "~/components/ui/sonner"
 import { Button } from "~/components/ui/button";
@@ -14,7 +13,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Field, FieldError, FieldGroup, FieldLabel } from "~/components/ui/field";
 
 // TODO: API
-import { ServerApiLogin } from "../server/users/login.api";
+import { ServerApiLogin } from "../../server/users/login.api";
 
 const formSchema = z.object({
   username: z.string()
@@ -40,24 +39,24 @@ export async function action({ request }: Route.ActionArgs) {
   
   const res = await ServerApiLogin({ username: `${username}`, password: `${password}` });
   
-  return res;
+  if(res.success) {
+    const url = new URL(request.url);
+    const fromPath = url.searchParams.get("from");
+    const redirectTo = fromPath ? decodeURIComponent(fromPath) : "/";
+
+    return redirect(redirectTo, {
+      headers: {
+        "Set-Cookie": `token=${res.data}; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=86400`
+      }
+    });
+  } else {
+    toast.error(res?.message, { position: "top-center", style: { backgroundColor: "var(--destructive)", color: "#fff"} });
+  }
 }
 
 export default function Login() {
   const fetcher = useFetcher();
-  const navigate = useNavigate();
   const location = useLocation();
-
-  useEffect(() => {
-    if(fetcher.data) {
-      if(fetcher.data.success) {
-        localStorage.setItem("token", fetcher.data.data);
-        navigate("/");
-      } else {
-        toast.error(fetcher?.data?.message, { position: "top-center", style: { backgroundColor: "var(--destructive)", color: "#fff"} });
-      }
-    }
-  }, [fetcher.data]);
 
   useEffect(() => {
     if(location?.state && location?.state?.username) {
@@ -75,21 +74,6 @@ export default function Login() {
   })
 
   function onSubmit(data: z.infer<typeof formSchema>) {
-    // toast("You submitted the following values:", {
-    //   description: (
-    //     <pre className="mt-2 w-[320px] overflow-x-auto rounded-md bg-code p-4 text-code-foreground">
-    //       <code>{JSON.stringify(data, null, 2)}</code>
-    //     </pre>
-    //   ),
-    //   position: "bottom-right",
-    //   classNames: {
-    //     content: "flex flex-col gap-2",
-    //   },
-    //   style: {
-    //     "--border-radius": "calc(var(--radius)  + 4px)",
-    //   } as React.CSSProperties,
-    // });
-
     fetcher.submit(data, { method: "post" });
   }
 
@@ -162,6 +146,10 @@ export default function Login() {
             </Button> */}
             <Button type="submit" form="form-login" className="cursor-pointer" disabled={ fetcher.state === 'submitting' }>
               Sign in { fetcher.state === 'submitting' ? <Spinner data-icon="inline-start" /> : '' }
+            </Button>
+
+            <Button variant="link" asChild className="h-auto justify-end p-0 leading-none">
+              <Link to={{ pathname: "/register" }} className="text-ring">Sign up</Link>
             </Button>
           </Field>
         </CardFooter>

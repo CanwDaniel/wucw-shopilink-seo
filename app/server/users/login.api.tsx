@@ -6,7 +6,7 @@ import jwt from "jsonwebtoken";
 export async function ServerApiLogin({ username, password }: User) {
   try {
     const jwtSecret = process.env.JWT_SECRET;
-
+    
     if(!jwtSecret) {
       throw new Error("JWT_SECRET is not defined in environment variables.");
     }
