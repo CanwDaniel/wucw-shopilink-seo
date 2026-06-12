@@ -46,7 +46,7 @@ export async function action({ request }: Route.ActionArgs) {
 
     return redirect(redirectTo, {
       headers: {
-        "Set-Cookie": `token=${res.data}; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=86400`
+        "Set-Cookie": `token=${res?.data?.token}; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=86400`
       }
     });
   } else {
@@ -145,7 +145,7 @@ export default function Login() {
               Reset
             </Button> */}
             <Button type="submit" form="form-login" className="cursor-pointer" disabled={ fetcher.state === 'submitting' }>
-              Sign in { fetcher.state === 'submitting' ? <Spinner data-icon="inline-start" /> : '' }
+              Log in { fetcher.state === 'submitting' ? <Spinner data-icon="inline-start" /> : '' }
             </Button>
 
             <Button variant="link" asChild className="h-auto justify-end p-0 leading-none">

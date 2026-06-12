@@ -21,12 +21,18 @@ export async function ServerApiLogin({ username, password }: User) {
       const correct_password = await bcrypt.compareSync(password, isuser.password);
 
       if(correct_password) {
-        const token = jwt.sign({ userId: isuser.id }, jwtSecret, { expiresIn: '1d' });
-
+        const { id, email, username, avatar } = isuser;
+        const token = jwt.sign({ userId: id }, jwtSecret, { expiresIn: '1d' });
         return {
           success: true,
           message: "User login successfully",
-          data: token
+          data: {
+            id,
+            email,
+            username,
+            avatar,
+            token
+          }
         };
       } else {
         return {

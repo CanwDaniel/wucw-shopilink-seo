@@ -13,6 +13,7 @@ model User {
   createdAt DateTime @default(now())
   password  String
   username  String   @unique
+  avatar    String?
   Auth      Auth?
 
   @@unique([id, username])

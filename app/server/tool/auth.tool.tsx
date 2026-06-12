@@ -7,7 +7,10 @@ export async function ServerToolAuth(token: string) {
     throw new Error("JWT_SECRET is not defined in environment variables.");
   }
 
-  const isVertify = jwt.verify(token, jwtSecret);
-
-  return isVertify;
+  try {
+    const isVertify = jwt.verify(token, jwtSecret);
+    return isVertify;
+  } catch (error) {
+    console.error("Token verification failed or returned invalid format");
+  }
 }

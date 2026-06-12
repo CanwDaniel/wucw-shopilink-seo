@@ -10,7 +10,6 @@ import {
   FileTextIcon,
   FolderIcon,
   HelpCircleIcon,
-  SearchIcon,
   SettingsIcon,
   HouseIcon
 } from "lucide-react"
@@ -42,62 +41,14 @@ const data = {
       icon: HouseIcon,
     },
     {
-      title: "Analytics",
-      url: "#",
+      title: "Analytic",
+      url: "/analytic",
       icon: BarChartIcon,
     },
     {
-      title: "Projects",
-      url: "#",
+      title: "Project",
+      url: "/project",
       icon: FolderIcon,
-    },
-  ],
-  navClouds: [
-    {
-      title: "Capture",
-      icon: CameraIcon,
-      isActive: true,
-      url: "#",
-      items: [
-        {
-          title: "Active Proposals",
-          url: "#",
-        },
-        {
-          title: "Archived",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Proposal",
-      icon: FileTextIcon,
-      url: "#",
-      items: [
-        {
-          title: "Active Proposals",
-          url: "#",
-        },
-        {
-          title: "Archived",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Prompts",
-      icon: FileCodeIcon,
-      url: "#",
-      items: [
-        {
-          title: "Active Proposals",
-          url: "#",
-        },
-        {
-          title: "Archived",
-          url: "#",
-        },
-      ],
     },
   ],
   navSecondary: [
