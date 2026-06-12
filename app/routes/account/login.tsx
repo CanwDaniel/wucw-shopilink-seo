@@ -3,7 +3,7 @@ import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { useFetcher, useLocation, redirect, Link } from "react-router";
+import { useFetcher, useLocation, redirect, Link, useActionData } from "react-router";
 import { useEffect } from "react";
 import { Toaster } from "~/components/ui/sonner"
 import { Button } from "~/components/ui/button";
@@ -36,10 +36,10 @@ const formSchema = z.object({
 export async function action({ request }: Route.ActionArgs) {
   const formData = await request.formData();
   const { username, password } = Object.fromEntries(formData);
-  
+
   const res = await ServerApiLogin({ username: `${username}`, password: `${password}` });
-  
-  if(res.success) {
+
+  if (res.success) {
     const url = new URL(request.url);
     const fromPath = url.searchParams.get("from");
     const redirectTo = fromPath ? decodeURIComponent(fromPath) : "/";
@@ -50,19 +50,26 @@ export async function action({ request }: Route.ActionArgs) {
       }
     });
   } else {
-    toast.error(res?.message, { position: "top-center", style: { backgroundColor: "var(--destructive)", color: "#fff"} });
+    return res;
   }
 }
 
 export default function Login() {
   const fetcher = useFetcher();
   const location = useLocation();
+  const actionData = useActionData();
 
   useEffect(() => {
-    if(location?.state && location?.state?.username) {
+    if (location?.state && location?.state?.username) {
       form.setValue('username', location.state.username);
     }
   }, [location.state]);
+
+  useEffect(() => {
+    if (fetcher.data && !fetcher.data.success) {
+      toast.error(fetcher.data?.message, { position: "top-center", style: { backgroundColor: "var(--destructive)", color: "#fff" } });
+    }
+  }, [fetcher.data])
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -112,7 +119,7 @@ export default function Login() {
                   </Field>
                 )}
               />
-              
+
               <Controller
                 name="password"
                 control={form.control}
@@ -144,8 +151,8 @@ export default function Login() {
             {/* <Button type="button" variant="outline" onClick={() => form.reset()}>
               Reset
             </Button> */}
-            <Button type="submit" form="form-login" className="cursor-pointer" disabled={ fetcher.state === 'submitting' }>
-              Log in { fetcher.state === 'submitting' ? <Spinner data-icon="inline-start" /> : '' }
+            <Button type="submit" form="form-login" className="cursor-pointer" disabled={fetcher.state === 'submitting'}>
+              Log in {fetcher.state === 'submitting' ? <Spinner data-icon="inline-start" /> : ''}
             </Button>
 
             <Button variant="link" asChild className="h-auto justify-end p-0 leading-none">
