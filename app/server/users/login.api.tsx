@@ -6,9 +6,14 @@ import jwt from "jsonwebtoken";
 export async function ServerApiLogin({ username, password }: User) {
   try {
     const jwtSecret = process.env.JWT_SECRET;
-    
-    if(!jwtSecret) {
-      throw new Error("JWT_SECRET is not defined in environment variables.");
+
+    if (!jwtSecret) {
+      console.error("ERROR:", "JWT_SECRET is not defined in environment variables.");
+
+      return {
+        success: false,
+        message: "Environment Error",
+      };
     }
 
     const isuser = await prisma.user.findFirst({
@@ -17,10 +22,10 @@ export async function ServerApiLogin({ username, password }: User) {
       }
     });
 
-    if(isuser && isuser.id) {
+    if (isuser && isuser.id) {
       const correct_password = await bcrypt.compareSync(password, isuser.password);
 
-      if(correct_password) {
+      if (correct_password) {
         const { id, email, username, avatar } = isuser;
         const token = jwt.sign({ userId: id }, jwtSecret, { expiresIn: '1d' });
         return {
@@ -46,7 +51,7 @@ export async function ServerApiLogin({ username, password }: User) {
         message: "Invalid username",
       };
     }
-  } catch(error: any) {
+  } catch (error: any) {
     return {
       success: false,
       message: "Failed to login user"
