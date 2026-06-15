@@ -1,5 +1,5 @@
-import type { User } from '../../types/user.type';
-import { prisma } from "../../../prisma/lib/prisma";
+import type { User } from 'types/user.type';
+import { prisma } from "prisma/lib/prisma";
 import bcrypt from 'bcryptjs';
 
 export async function ServerApiRegister({ username, password, email }: User) {

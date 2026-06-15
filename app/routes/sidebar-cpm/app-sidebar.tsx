@@ -4,10 +4,7 @@ import * as React from "react"
 import {
   PackageSearchIcon,
   BarChartIcon,
-  CameraIcon,
   DatabaseIcon,
-  FileCodeIcon,
-  FileTextIcon,
   FolderIcon,
   HelpCircleIcon,
   SettingsIcon,
@@ -28,11 +25,14 @@ import {
   SidebarMenuItem,
 } from "~/components/ui/sidebar"
 
+import { useEffect } from 'react';
+import { NavLink } from "react-router"
+
 const data = {
   user: {
-    name: "shadcn",
-    email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
+    name: "",
+    email: "",
+    avatar: "",
   },
   navMain: [
     {
@@ -73,6 +73,15 @@ const data = {
 }
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  useEffect(() => { 
+    if(localStorage?.getItem('userInfo')) {
+      const { username, email, avatar } = JSON.parse(`${localStorage.getItem('userInfo')}`);
+      data.user.name = username;
+      data.user.email = email;
+      data.user.avatar = avatar;
+    }
+  }, []);
+
   return (
     <Sidebar collapsible="offcanvas" {...props}>
       <SidebarHeader>
@@ -82,10 +91,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               asChild
               className="data-[slot=sidebar-menu-button]:p-1.5!"
             >
-              <a href="#">
+              <NavLink to="/">
                 <PackageSearchIcon className="h-5 w-5" />
                 <span className="text-base font-semibold">Shopilink SEO</span>
-              </a>
+              </NavLink>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>

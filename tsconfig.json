@@ -14,7 +14,12 @@
     "jsx": "react-jsx",
     "rootDirs": [".", "./.react-router/types"],
     "paths": {
-      "~/*": ["./app/*"]
+      "~/*": ["./app/*"],
+      "routes/*": ["./app/routes/*"],
+      "server/*": ["./app/server/*"],
+      "features/*": ["./app/features/*"],
+      "types/*": ["./app/types/*"],
+      "prisma/*": ["./prisma/*"],
     },
     "esModuleInterop": true,
     "verbatimModuleSyntax": true,

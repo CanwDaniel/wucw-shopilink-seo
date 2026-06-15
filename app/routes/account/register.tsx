@@ -25,7 +25,7 @@ import {
 } from "~/components/ui/field";
 
 // TODO: API
-import { ServerApiRegister } from "../../server/users/register.api";
+import { ServerApiRegister } from "server/users/register.api";
 
 // TODO: VALIDATE
 const formSchema = z.object({

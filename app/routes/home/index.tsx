@@ -1,8 +1,8 @@
 import type { Route } from "./+types/index";
 import { useEffect } from 'react';
 import { useLoaderData } from 'react-router';
-import { ServerToolAuth } from '../../server/tool/auth.tool';
-import { ServerApiFindUser } from '../../server/users/find.api';
+import { ServerToolAuth } from 'server/tool/auth.tool';
+import { ServerApiFindUser } from 'server/users/find.api';
 
 export async function loader({ request }: Route.LoaderArgs) {
   const cookieHeader = request.headers.get("Cookie") || "";

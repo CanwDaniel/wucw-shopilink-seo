@@ -1,4 +1,4 @@
-import { prisma } from "../../../prisma/lib/prisma";
+import { prisma } from "prisma/lib/prisma";
 
 export async function ServerApiFindUser({ userId }: { userId: string }) {
   try {

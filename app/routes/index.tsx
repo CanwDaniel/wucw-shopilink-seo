@@ -1,6 +1,6 @@
 import type { Route } from "./+types/index";
 import { Outlet, redirect } from "react-router";
-import { ServerToolAuth } from "../server/tool/auth.tool";
+import { ServerToolAuth } from "server/tool/auth.tool";
 import { AppSidebar } from "./sidebar-cpm/app-sidebar";
 import { SiteHeader } from "./sidebar-cpm/site-header";
 import { Toaster } from "~/components/ui/sonner";
