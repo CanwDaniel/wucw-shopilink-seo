@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { redirect } from "react-router";
 
 export function action() {
@@ -9,7 +10,5 @@ export function action() {
 }
 
 export default function Logout() {
-  localStorage.removeItem("userInfo");
-  
   return null;
 }

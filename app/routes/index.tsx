@@ -17,7 +17,7 @@ export async function loader({ request }: Route.LoaderArgs) {
   if (!token) {
     return redirect(redirectPath);
   }
-
+  
   const isVerify = await ServerToolAuth(token);
   
   if(!isVerify) {
@@ -29,7 +29,6 @@ export async function loader({ request }: Route.LoaderArgs) {
   } else {
     return null;
   }
-  
 }
 
 export default function Root() {

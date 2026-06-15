@@ -6,7 +6,7 @@ import {
   UserCircleIcon,
 } from "lucide-react";
 
-import { Form } from "react-router";
+import { Form, useFetcher } from "react-router";
 
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import {
@@ -35,6 +35,11 @@ export function NavUser({
   };
 }) {
   const { isMobile } = useSidebar();
+  const fetcher = useFetcher();
+
+  function handleSubmit() {
+    localStorage.removeItem("userInfo");
+  }
 
   return (
     <SidebarMenu>
@@ -86,14 +91,14 @@ export function NavUser({
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <Form method="post" action="/logout">
+            <fetcher.Form method="post" action="/logout" onSubmit={handleSubmit}>
               <DropdownMenuItem asChild>
                 <button type="submit" className="w-full cursor-pointer">
                   <LogOutIcon />
                   Log out
                 </button>
               </DropdownMenuItem>
-            </Form>
+            </fetcher.Form>
           </DropdownMenuContent>
         </DropdownMenu>
       </SidebarMenuItem>
