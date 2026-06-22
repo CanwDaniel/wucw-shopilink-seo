@@ -93,7 +93,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             >
               <NavLink to="/">
                 <PackageSearchIcon className="h-5 w-5" />
-                <span className="text-base font-semibold">Shopilink SEO</span>
+                <span className="text-base font-semibold">Shopilink</span>
               </NavLink>
             </SidebarMenuButton>
           </SidebarMenuItem>
