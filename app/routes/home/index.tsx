@@ -28,9 +28,9 @@ export async function action({ request }: Route.ActionArgs) {
 
   try {
     const profile = await extractProfile(`${chat}`);
-    
+
     const recommendation = recommendChairs(profile);
-    console.log('recommendation', recommendation);
+
     return {
       success: true,
       message: JSON.stringify(recommendation),
@@ -50,11 +50,11 @@ export async function loader({ request }: Route.LoaderArgs) {
   let userId: string | null = null;
   if (isVerify && typeof isVerify !== 'string') {
     userId = isVerify.userId ?? null;
-    
-    if(userId) {
+
+    if (userId) {
       const userInfo = await ServerApiFindUser({ userId });
 
-      if(userInfo.success) {
+      if (userInfo.success) {
         return userInfo.data;
       }
     }
@@ -66,7 +66,7 @@ export async function loader({ request }: Route.LoaderArgs) {
 export default function Home() {
   const loaderData = useLoaderData();
   const fetcher = useFetcher();
-  
+
   useEffect(() => {
     if (loaderData) {
       localStorage.setItem("userInfo", JSON.stringify(loaderData));
@@ -102,10 +102,10 @@ export default function Home() {
             name="chat"
             control={form.control}
             render={
-              ({field, fieldState}) => (
+              ({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
                   <FieldLabel htmlFor="fieldgroup-chat">Chat</FieldLabel>
-                  <Input {...field} id="fieldgroup-chat" aria-invalid={fieldState.invalid} placeholder=""/>
+                  <Input {...field} id="fieldgroup-chat" aria-invalid={fieldState.invalid} placeholder="" />
                 </Field>
               )}
           />
@@ -115,7 +115,7 @@ export default function Home() {
           </Field>
         </FieldGroup>
       </fetcher.Form>
-    
+
       {
         fetcher.state === 'submitting' ? <Spinner className="size-4" /> : fetcher?.data?.message
       }

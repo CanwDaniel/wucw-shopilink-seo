@@ -1,0 +1,9 @@
+model Product {
+  id               String   @id @default(cuid())
+  title            String
+  price            Int
+  material         String?
+  minDailyHours    Int?
+  recommendedUsage String[]
+  createdAt        DateTime @default(now())
+}
