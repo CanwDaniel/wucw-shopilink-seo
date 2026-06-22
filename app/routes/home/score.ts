@@ -1,5 +1,3 @@
-import { chairs } from "./chairs";
-
 type UserProfile = {
   budget?: number;
   dailyHours?: number;
@@ -32,11 +30,11 @@ function scoreChair(profile: UserProfile, chair: Chair) {
   return score;
 }
 
-export function recommendChairs(profile: UserProfile) {
-  return chairs.map((chair) => ({
-      ...chair,
-      score: scoreChair(profile, chair),
-    }))
+export function recommendChairs(profile: UserProfile, chairs: any) {
+  return chairs.data.map((chair: any) => ({
+    ...chair,
+    score: scoreChair(profile, chair),
+  }))
     .sort((a, b) => b.score - a.score)
     .slice(0, 3);
 }

@@ -8,6 +8,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import { ServerToolAuth } from 'server/tool/auth.tool';
 import { ServerApiFindUser } from 'server/users/find.api';
+import { ServerApiFindProduct } from 'server/ai-chat/product.api';
+
 
 import { Button } from "~/components/ui/button"
 import { Input } from "~/components/ui/input"
@@ -27,10 +29,12 @@ export async function action({ request }: Route.ActionArgs) {
   const { chat } = Object.fromEntries(formData);
 
   try {
+    const chairs = await ServerApiFindProduct();
+
     const profile = await extractProfile(`${chat}`);
 
-    const recommendation = recommendChairs(profile);
-
+    const recommendation = recommendChairs(profile, chairs);
+    console.log('😑😑😑😑😑', recommendation);
     return {
       success: true,
       message: JSON.stringify(recommendation),
