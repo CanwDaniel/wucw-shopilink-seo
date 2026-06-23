@@ -1,0 +1,11 @@
+//query     用户原始自然语言输入
+//keyword   Ai 提炼出的检索关键词
+
+model Aisearchlog {
+  id        String    @id @default(cuid())
+  query     String
+  keyword   String
+  minPrice  Float?
+  maxPrice  Float?
+  createdAt DateTime  @default(now())
+}
