@@ -405,10 +405,6 @@ export type ProductCreaterecommendedUsageInput = {
   set: string[]
 }
 
-export type StringFieldUpdateOperationsInput = {
-  set?: string
-}
-
 export type IntFieldUpdateOperationsInput = {
   set?: number
   increment?: number
@@ -432,10 +428,6 @@ export type NullableIntFieldUpdateOperationsInput = {
 export type ProductUpdaterecommendedUsageInput = {
   set?: string[]
   push?: string | string[]
-}
-
-export type DateTimeFieldUpdateOperationsInput = {
-  set?: Date | string
 }
 
 

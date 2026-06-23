@@ -51,6 +51,7 @@ export const AnyNull = runtime.AnyNull
 
 
 export const ModelName = {
+  Aisearchlog: 'Aisearchlog',
   Product: 'Product',
   User: 'User',
   Auth: 'Auth'
@@ -70,6 +71,18 @@ export const TransactionIsolationLevel = runtime.makeStrictEnum({
 } as const)
 
 export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
+
+
+export const AisearchlogScalarFieldEnum = {
+  id: 'id',
+  query: 'query',
+  keyword: 'keyword',
+  minPrice: 'minPrice',
+  maxPrice: 'maxPrice',
+  createdAt: 'createdAt'
+} as const
+
+export type AisearchlogScalarFieldEnum = (typeof AisearchlogScalarFieldEnum)[keyof typeof AisearchlogScalarFieldEnum]
 
 
 export const ProductScalarFieldEnum = {

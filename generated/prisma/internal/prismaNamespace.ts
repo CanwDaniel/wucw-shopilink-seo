@@ -384,6 +384,7 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 
 
 export const ModelName = {
+  Aisearchlog: 'Aisearchlog',
   Product: 'Product',
   User: 'User',
   Auth: 'Auth'
@@ -402,10 +403,84 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "product" | "user" | "auth"
+    modelProps: "aisearchlog" | "product" | "user" | "auth"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
+    Aisearchlog: {
+      payload: Prisma.$AisearchlogPayload<ExtArgs>
+      fields: Prisma.AisearchlogFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.AisearchlogFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AisearchlogPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.AisearchlogFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AisearchlogPayload>
+        }
+        findFirst: {
+          args: Prisma.AisearchlogFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AisearchlogPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.AisearchlogFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AisearchlogPayload>
+        }
+        findMany: {
+          args: Prisma.AisearchlogFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AisearchlogPayload>[]
+        }
+        create: {
+          args: Prisma.AisearchlogCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AisearchlogPayload>
+        }
+        createMany: {
+          args: Prisma.AisearchlogCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.AisearchlogCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AisearchlogPayload>[]
+        }
+        delete: {
+          args: Prisma.AisearchlogDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AisearchlogPayload>
+        }
+        update: {
+          args: Prisma.AisearchlogUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AisearchlogPayload>
+        }
+        deleteMany: {
+          args: Prisma.AisearchlogDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.AisearchlogUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.AisearchlogUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AisearchlogPayload>[]
+        }
+        upsert: {
+          args: Prisma.AisearchlogUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AisearchlogPayload>
+        }
+        aggregate: {
+          args: Prisma.AisearchlogAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateAisearchlog>
+        }
+        groupBy: {
+          args: Prisma.AisearchlogGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AisearchlogGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.AisearchlogCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AisearchlogCountAggregateOutputType> | number
+        }
+      }
+    }
     Product: {
       payload: Prisma.$ProductPayload<ExtArgs>
       fields: Prisma.ProductFieldRefs
@@ -667,6 +742,18 @@ export const TransactionIsolationLevel = runtime.makeStrictEnum({
 export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
 
 
+export const AisearchlogScalarFieldEnum = {
+  id: 'id',
+  query: 'query',
+  keyword: 'keyword',
+  minPrice: 'minPrice',
+  maxPrice: 'maxPrice',
+  createdAt: 'createdAt'
+} as const
+
+export type AisearchlogScalarFieldEnum = (typeof AisearchlogScalarFieldEnum)[keyof typeof AisearchlogScalarFieldEnum]
+
+
 export const ProductScalarFieldEnum = {
   id: 'id',
   title: 'title',
@@ -746,16 +833,16 @@ export type ListStringFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaMod
 
 
 /**
- * Reference to a field of type 'Int'
+ * Reference to a field of type 'Float'
  */
-export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
+export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
     
 
 
 /**
- * Reference to a field of type 'Int[]'
+ * Reference to a field of type 'Float[]'
  */
-export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
+export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
     
 
 
@@ -774,6 +861,20 @@ export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaM
 
 
 /**
+ * Reference to a field of type 'Int'
+ */
+export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
+    
+
+
+/**
+ * Reference to a field of type 'Int[]'
+ */
+export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
+    
+
+
+/**
  * Reference to a field of type 'Role'
  */
 export type EnumRoleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Role'>
@@ -784,20 +885,6 @@ export type EnumRoleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel
  * Reference to a field of type 'Role[]'
  */
 export type ListEnumRoleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Role[]'>
-    
-
-
-/**
- * Reference to a field of type 'Float'
- */
-export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
-    
-
-
-/**
- * Reference to a field of type 'Float[]'
- */
-export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
     
 
 /**
@@ -910,6 +997,7 @@ export type PrismaClientOptions = ({
   queryPlanCacheMaxSize?: number
 }
 export type GlobalOmitConfig = {
+  aisearchlog?: Prisma.AisearchlogOmit
   product?: Prisma.ProductOmit
   user?: Prisma.UserOmit
   auth?: Prisma.AuthOmit
