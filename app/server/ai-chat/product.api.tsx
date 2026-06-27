@@ -6,8 +6,6 @@ export async function ServerApiFindProduct() {
 			take: 10
 		});
 
-		console.log('product data', isproduct);
-
 		if (isproduct.length) {
 			return {
 				success: true,

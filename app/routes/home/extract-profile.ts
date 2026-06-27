@@ -38,8 +38,11 @@ export async function extractProfile(
     });
 
   const content = response.choices[0].message.content;
-
   const parsed = JSON.parse(content!);
-  console.log('AI: ', parsed);
-  return UserProfileSchema.parse(parsed);
+  
+  const result = Object.fromEntries(
+    Object.entries(parsed).filter(([_, v]) => v !== null)
+  );
+  
+  return UserProfileSchema.parse(result);
 }

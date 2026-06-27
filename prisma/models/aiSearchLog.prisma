@@ -3,7 +3,7 @@
 
 model Aisearchlog {
   id        String    @id @default(cuid())
-  query     String
+  query     String?
   keyword   String
   minPrice  Float?
   maxPrice  Float?
