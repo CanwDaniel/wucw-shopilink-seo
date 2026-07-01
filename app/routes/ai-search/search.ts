@@ -1,6 +1,8 @@
-import { prompt } from './utils.js';
+import { getMcpEndpoint } from './mcp.js';
 
-export const CATALOG_URL = 'https://catalog.shopify.com/api/ucp/mcp';
+// export const CATALOG_URL = 'https://catalog.shopify.com/api/ucp/mcp';
+// TODO myshopify
+export const CATALOG_URL = await getMcpEndpoint(`https://${process.env.SHOP_ORIGIN}`);;
 
 export function showCatalog() {
   console.log('\n── 2. Search the Catalog ─────────────────────────\n');
@@ -14,16 +16,18 @@ export function displayProducts(products) {
     const options = product.options?.map(o => `${o.name}: ${o.values.map(v => v.label).join(', ')}`).join('  |  ') ?? '—';
     console.log(`  [${i + 1}] ${product.title}  |  ${price}  |  ${options}`);
   });
-  console.log();
 }
 
-export async function searchProducts(token, filters = {}) {
-  const query = process.argv[2] || await prompt('\x1b[1m  Hello! What are you looking for today?\x1b[0m\n\n  > ');
+export async function searchProducts(token, buyerIp, filters = {}) {
+  const query = 'best';
+  
+  // TODO myshopify
   const res = await fetch(CATALOG_URL, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`
+      'X-Shopify-Access-Token': `${token}`,
+      'Shopify-Buyer-IP': buyerIp
     },
     body: JSON.stringify({
       jsonrpc: '2.0',
@@ -42,6 +46,12 @@ export async function searchProducts(token, filters = {}) {
       }
     })
   });
+
   const data = await res.json();
-  return data.result?.structuredContent ?? null;
+  
+  if(data.result?.structuredContent) {
+    return data.result?.structuredContent ?? null;
+  } else {
+    return new Error(data.result.content[0].text);
+  }
 }

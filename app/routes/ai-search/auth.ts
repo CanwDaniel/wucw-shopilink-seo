@@ -16,8 +16,10 @@ export async function getAccessToken() {
   
   const [, payload] = access_token.split('.');
   const { scopes, exp, limits } = JSON.parse(Buffer.from(payload, 'base64').toString('utf8'));
+
   console.log('\n── 1. Authentication ─────────────────────────\n');
   console.log(`  Scopes:  ${scopes}`);
   console.log(`  Expires: ${new Date(exp * 1000).toLocaleTimeString()}`);
+  
   return access_token;
 }
