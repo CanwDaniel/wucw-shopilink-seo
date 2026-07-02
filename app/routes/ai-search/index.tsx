@@ -11,6 +11,7 @@ import { getOrderAccessToken, getOrder, displayOrder } from './orders.js';
 async function main(buyerIp) {
   // 1. Authentication
   // const token = await getAccessToken();
+
   // TODO myshopify
   const token = process.env.SHOPIFY_ADMIN_ACCESS_TOKEN;
   
@@ -18,7 +19,6 @@ async function main(buyerIp) {
   let variant = null;
   
   while(!variant) {
-    showCatalog();
     const result = await searchProducts(token, buyerIp, {
       ships_to: { country: 'US' },
       // shop_ids: [ `${actualShopId}` ],
@@ -29,11 +29,13 @@ async function main(buyerIp) {
     });
     
     if (!result.products?.length) return;
-    
+    showCatalog();
+
     displayProducts(result.products);
+
     variant = await selectProduct(token, result.products);
   }
-
+  
   const { variantId, checkout_url: checkoutUrl } = variant;
   
   // 4.Build a cart
@@ -48,7 +50,7 @@ async function main(buyerIp) {
   const email = await prompt('\n\x1b[1m  Enter your email address:\x1b[0m  ');
   const continueUrl = await updateCheckout(token, checkoutId, email, checkoutUrl, buyerIp);
   const attributedUrl = new URL(continueUrl);
-  attributedUrl.searchParams.set('utm_source', 'ucp_demo_app');
+  attributedUrl.searchParams.set('utm_source', 'ucp_app');
   console.log(`  Refer your buyer to finish checkout at:\n\n  ${attributedUrl}\n`);
   
   // 7. Cancel checkout

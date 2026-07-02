@@ -20,8 +20,9 @@ export async function createCheckout(token, cartId, checkoutUrl, buyerIp, cartLi
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`,
-      'Shopify-Buyer-IP': buyerIp
+      'X-Shopify-Access-Token': `${token}`,
+      // 'Authorization': `Bearer ${token}`,
+      // 'Shopify-Buyer-IP': buyerIp
     },
     body: JSON.stringify({
       jsonrpc: '2.0',
@@ -67,8 +68,9 @@ async function getCheckout(token, checkoutId, checkoutUrl, buyerIp) {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`,
-      'Shopify-Buyer-IP': buyerIp
+      'X-Shopify-Access-Token': `${token}`,
+      // 'Authorization': `Bearer ${token}`,
+      // 'Shopify-Buyer-IP': buyerIp
     },
     body: JSON.stringify({
       jsonrpc: '2.0',
@@ -103,8 +105,9 @@ export async function updateCheckout(token, checkoutId, email, checkoutUrl, buye
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`,
-      'Shopify-Buyer-IP': buyerIp
+      'X-Shopify-Access-Token': `${token}`,
+      // 'Authorization': `Bearer ${token}`,
+      // 'Shopify-Buyer-IP': buyerIp
     },
     body: JSON.stringify({
       jsonrpc: '2.0',
@@ -150,8 +153,9 @@ export async function cancelCheckout(token, checkoutId, checkoutUrl, buyerIp) {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`,
-      'Shopify-Buyer-IP': buyerIp
+      'X-Shopify-Access-Token': `${token}`,
+      // 'Authorization': `Bearer ${token}`,
+      // 'Shopify-Buyer-IP': buyerIp
     },
     body: JSON.stringify({
       jsonrpc: '2.0',
@@ -201,8 +205,9 @@ export async function completeCheckout(token, checkoutId, checkoutUrl, payment, 
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`,
-      'Shopify-Buyer-IP': buyerIp
+      'X-Shopify-Access-Token': `${token}`,
+      // 'Authorization': `Bearer ${token}`,
+      // 'Shopify-Buyer-IP': buyerIp
     },
     body: JSON.stringify({
       jsonrpc: '2.0',
