@@ -8,7 +8,8 @@ import {
   FolderIcon,
   HelpCircleIcon,
   SettingsIcon,
-  HouseIcon
+  HouseIcon,
+  BotIcon,
 } from "lucide-react"
 
 import { NavDocuments } from "./nav-documents"
@@ -49,6 +50,11 @@ const data = {
       title: "Project",
       url: "/project",
       icon: FolderIcon,
+    },
+    {
+      title: "AIchat",
+      url: "/aichat",
+      icon: BotIcon,
     },
   ],
   navSecondary: [

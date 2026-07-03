@@ -9,10 +9,10 @@ export default [
     index("routes/home/index.tsx"),
     route("project", "routes/project/index.tsx"),
     route("analytic", "routes/analytic/index.tsx"),
+    route("aichat", "routes/ai-home/index.tsx"),
 
-    // API
-    route("aisearch", "routes/ai-search/index.tsx"),
-    route("webhooks", "routes/ai-search/webhook_server.tsx"),
+    // API 暂时没用到
+    route("webhooks", "routes/ai-home/ai-product-search/webhook_server.tsx"),
   ]),
 
   route("/.well-known/appspecific/com.chrome.devtools.json", "debugNull.tsx")
