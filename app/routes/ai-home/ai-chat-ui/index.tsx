@@ -80,7 +80,6 @@ export default function AiChatUi() {
   const isBusy = status === "submitted" || status === "streaming";
 
   function submitMessage(data: any) {
-    console.log(messages);
     if(!data.nextMessage || isBusy) return;
     sendMessage({ text: data.nextMessage });
     form.reset();
@@ -116,7 +115,7 @@ export default function AiChatUi() {
             </CardAction>
           </CardHeader>
 
-          <CardContent className="flex-1 overflow-hidden px-4">
+          <CardContent className="flex-1 overflow-hidden pl-4 pr-2">
             {messages.length === 0 ? (
               <Empty className="h-full">
                 <EmptyHeader>
@@ -132,7 +131,7 @@ export default function AiChatUi() {
               </Empty>
             ) : (
               <MessageScroller>
-                <MessageScrollerViewport>
+                <MessageScrollerViewport className="pr-2">
                   <MessageScrollerContent
                     aria-busy={isBusy}
                     className="p-(--card-spacing)"
@@ -146,7 +145,7 @@ export default function AiChatUi() {
                     ))}
                   </MessageScrollerContent>
                 </MessageScrollerViewport>
-                <MessageScrollerButton />
+                <MessageScrollerButton className="cursor-pointer"/>
               </MessageScroller>
             )}
           </CardContent>
@@ -172,6 +171,13 @@ export default function AiChatUi() {
                         placeholder="Ask me anything"
                         autoComplete="off"
                         className="flex-1 resize-none border-none focus:ring-0 focus-visible:ring-0 min-h-24"
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter" && !e.shiftKey && field.value && !isBusy) {
+                            e.preventDefault();
+                            console.log("submit", field.value);
+                            submitMessage({ nextMessage: field.value });
+                          }
+                        }}
                       />
                     )
                   }}

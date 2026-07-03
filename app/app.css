@@ -119,6 +119,19 @@ body {
   --sidebar-ring: oklch(0.68 0.15 165);
 }
 
+[data-radix-scroll-area-viewport] {
+  scrollbar-width: thin;
+}
+
+[data-radix-scroll-area-viewport]::-webkit-scrollbar {
+  width: 6px;
+}
+
+[data-radix-scroll-area-viewport]::-webkit-scrollbar-thumb {
+  background-color: rgb(226, 232, 240);
+  border-radius: 9999px;
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
