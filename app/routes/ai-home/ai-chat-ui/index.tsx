@@ -3,7 +3,7 @@ import { ArrowUpIcon, MessageCircleDashedIcon, RotateCwIcon } from "lucide-react
 import { createChat, getMessageText } from "~/lib/ai";
 import { MessageAnimated } from "~/components/message-animated";
 import { Button } from "~/components/ui/button";
-import { Input } from "~/components/ui/input";
+import { Textarea } from "~/components/ui/textarea";
 import { Controller, useForm } from "react-hook-form";
 import {
   Card,
@@ -73,14 +73,18 @@ const transport = chat.transport({ chunkDelayMs: 20 });
 
 export default function AiChatUi() {
   const form = useForm({
-    defaultValues: { message: "" },
+    defaultValues: { nextMessage: "" },
   });
-
-  const { messages, sendMessage, status, setMessages } = useChat({ messages: initialMessages, transport });
-  
+  const { messages, sendMessage, status, setMessages } = useChat({ messages: [], transport });
   const nextMessage = chat.next({ after: messages });
-
   const isBusy = status === "submitted" || status === "streaming";
+
+  function submitMessage(data: any) {
+    console.log(messages);
+    if(!data.nextMessage || isBusy) return;
+    sendMessage({ text: data.nextMessage });
+    form.reset();
+  }
 
   return (
     <MessageScrollerProvider autoScroll>
@@ -99,6 +103,7 @@ export default function AiChatUi() {
                       aria-label="Reset conversation"
                       onClick={() => setMessages(initialMessages)}
                       disabled={isBusy}
+                      className="cursor-pointer"
                     >
                       <RotateCwIcon />
                     </Button>
@@ -147,7 +152,7 @@ export default function AiChatUi() {
           </CardContent>
 
           <CardFooter className="flex-col gap-2">
-            <form onSubmit={(e) => {
+            {/* <form onSubmit={(e) => {
               e.preventDefault();
               if (!nextMessage || isBusy) {
                 return;
@@ -155,14 +160,23 @@ export default function AiChatUi() {
               void sendMessage(nextMessage);
             }}
               className="w-full"
-            >
+            > */}
+            <form onSubmit={form.handleSubmit(submitMessage)} className="w-full">
               <InputGroup>
-                <Input
-                  placeholder="Ask me anything"
-                  value={nextMessage?.text}
-                  disabled={!nextMessage || isBusy}
-                  className="h-14 w-full"
+                <Controller name="nextMessage" control={form.control} render={({field, fieldState}) => {
+                    return (
+                      <Textarea
+                        {...field}
+                        id="form-nextMessage"
+                        aria-invalid={fieldState.invalid}
+                        placeholder="Ask me anything"
+                        autoComplete="off"
+                        className="flex-1 resize-none border-none focus:ring-0 focus-visible:ring-0 min-h-24"
+                      />
+                    )
+                  }}
                 />
+                
                 {/* <div className="h-14 w-full px-3 py-2.5">
                   <span
                     className="line-clamp-2 opacity-60 data-[status=ready]:opacity-100"
@@ -176,13 +190,14 @@ export default function AiChatUi() {
                   </span>
                 </div> */}
                 
-                <InputGroupAddon align="block-end" className="pt-1">
+                <InputGroupAddon align="block-end" className="pt-1 w-auto absolute right-0 bottom-0">
                   <InputGroupButton
                     type="submit"
                     variant="default"
                     size="icon-sm"
-                    disabled={!nextMessage || isBusy}
-                    className="ml-auto"
+                    // disabled={!nextMessage || isBusy}
+                    disabled={isBusy}
+                    className="ml-auto cursor-pointer"
                   >
                     <ArrowUpIcon />
                     <span className="sr-only">Send</span>
