@@ -1,4 +1,4 @@
-import { verifyOrderWebhook, displayOrder } from './orders.js';
+import { verifyOrderWebhook, displayOrder } from '~/apis/ai-product-search/orders';
 
 export function loader() {
   return null;

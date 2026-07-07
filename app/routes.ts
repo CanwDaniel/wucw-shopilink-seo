@@ -11,8 +11,9 @@ export default [
     route("analytic", "routes/analytic/index.tsx"),
     route("aichat", "routes/ai-home/index.tsx"),
 
-    // API 暂时没用到
-    route("webhooks", "routes/ai-home/ai-product-search/webhook_server.tsx"),
+    // APIs
+    route("api/aichat", "apis/ai-chat/index.tsx"),
+    route("api/webhooks", "apis/webhook-server/index.tsx"),
   ]),
 
   route("/.well-known/appspecific/com.chrome.devtools.json", "debugNull.tsx")

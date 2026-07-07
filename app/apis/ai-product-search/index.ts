@@ -72,7 +72,7 @@ async function main(buyerIp) {
   // displayOrder(order);
 }
 
-export function loader({ request }: Route.LoaderArgs) {
+export function initMain({ request }: Route.LoaderArgs) {
   const buyerIp = request.headers.get("X-Forwarded-For")?.split(",")[0].trim() || request.headers.get("X-Real-IP") || "127.0.0.1";
 
   main(buyerIp).catch(err => console.error('Request failed:', err));
