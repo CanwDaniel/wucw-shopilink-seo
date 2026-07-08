@@ -1,7 +1,7 @@
 import type { Route } from "./+types/index";
 
 // {data} content-type会自动使用application/json，返回的内容会被自动解析为json对象
-import { data } from "react-router";
+// import { data } from "react-router";
 
 // import { Controller, useForm } from "react-hook-form";
 
@@ -56,8 +56,8 @@ export async function action({ request }: Route.ActionArgs) {
   
   try {
     // todo: 这里需要通过shopify获取，但需要发送查询的条件
-    const chairs = await ServerApiFindProduct();
-
+    // const chairs = await ServerApiFindProduct();
+    
     const session = await getSession(request.headers.get("Cookie"));
 
     const previousProfile = session.get("profile") ?? {};
@@ -66,7 +66,7 @@ export async function action({ request }: Route.ActionArgs) {
     
     // todo：合并之前已经整理的字段
     let profile;
-    console.log("extractedProfile", extractedProfile);
+    
     if(extractedProfile) {
       profile = mergeProfile(previousProfile, extractedProfile);
 
@@ -74,12 +74,19 @@ export async function action({ request }: Route.ActionArgs) {
     }
     
     const missing = getMissingFields(profile);
-    
+    console.log("missing", missing);
     if (missing.length > 0) {
       return handleResult(missing[0].message, session);
     }
+
+    // 通过提供的profile去查找符合的产品
+    const { origin } = new URL(request.url);
+
+    const chairs = await fetch(`${origin}/api/aiproduct/search`, { method: "POST" });
+
+    const chairsData = await chairs.json();
     
-    const recommendation = recommendChairs(profile, chairs);
+    const recommendation = recommendChairs(profile, chairsData);
 
     return handleResult(recommendation, session);
   } catch (error) {

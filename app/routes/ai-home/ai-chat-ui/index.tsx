@@ -1,4 +1,5 @@
 import { useChat } from "@ai-sdk/react";
+import { useState } from "react";
 import { DefaultChatTransport } from "ai";
 import {
   ArrowUpIcon,
@@ -52,32 +53,58 @@ import {
 
 import { memo } from "react";
 
+import VariantDialog from './vairant-dialog';
+
 const CardItem = memo(({ data }) => {
+  const [ show, setShow ] = useState(false);
+  const [ cardData, setCardData ] = useState({});
+
+  const handleCarouselItem = (card) => {
+    setShow(!show);
+    setCardData(card);
+  };
+
+  function handleSubmitVariant(dialogData: any) {
+    console.log(dialogData);
+    setCardData({});
+  };
+
   return data.map((part, partIdx) => {
     if (part?.type === "data-recommendation") {
       const recommendation = part.data?.recommendation || [];
-      
+
       return (
         <div key={partIdx} className="flex justify-center">
           {
-            Array.isArray(recommendation) && recommendation.length > 0 ? (
-              <Carousel className="w-full max-w-48 sm:max-w-xs md:max-w-sm">
-                <CarouselContent className="ml-0">
-                  {recommendation.map((_, index) => (
-                    <CarouselItem key={_.id} className="basis-1/3 p-1">
-                      <div className="p-1">
-                        <Card>
-                          <CardContent className="flex aspect-square items-center justify-center p-2">
-                            <CardDescription>{_.title}</CardDescription>
-                          </CardContent>
-                        </Card>
-                      </div>
-                    </CarouselItem>
-                  ))}
-                </CarouselContent>
-                <CarouselPrevious className="cursor-pointer -left-10" />
-                <CarouselNext className="cursor-pointer" />
-              </Carousel>
+            Array.isArray(part.data?.recommendation) && recommendation.length > 0 ? (
+              <>
+                <Carousel className="w-full max-w-48 sm:max-w-xs md:max-w-sm">
+                  <CarouselContent className="ml-0">
+                    {recommendation.map((_, index) => (
+                      <CarouselItem key={_.id} className="basis-1/2 p-0 ml-4 cursor-pointer" onClick={() => handleCarouselItem(_)}>
+                        <div className="pt-1 pb-1">
+                          <Card className="pt-2 pb-2">
+                            <CardContent className="flex aspect-square items-center justify-center pl-2 pr-2">
+                              <CardDescription className="text-center">
+                                <img className="rounded-t-lg" src={_.media[0].url} alt={_.media[0].alt_text} />
+                                <p className="text-left">{_.title}</p>
+                                <p className="text-right mt-2">
+                                  <span className="mr-1">{_.price_range.min.amount}</span>
+                                  <span>{_.price_range.min.currency}</span>
+                                </p>
+                              </CardDescription>
+                            </CardContent>
+                          </Card>
+                        </div>
+                      </CarouselItem>
+                    ))}
+                  </CarouselContent>
+                  <CarouselPrevious className="cursor-pointer -left-10" />
+                  <CarouselNext className="cursor-pointer" />
+                </Carousel>
+
+                <VariantDialog show={ show } setShow={ setShow } onConfirm={ handleSubmitVariant } cardData={ cardData }/>
+              </>
             ) : recommendation ? (
               <div className="p-4 w-full text-sm text-muted-foreground leading-relaxed animate-fade-in">
                 <p>{String(recommendation)}</p>

@@ -34,15 +34,20 @@ export async function extractProfile(message: string) {
   });
   
   if(response?.choices && response.choices[0]) {
-    const content = response.choices[0].message.content;
-
-    const parsed = JSON.parse(content!);
-  
-    const result = Object.fromEntries(
-      Object.entries(parsed).filter(([_, v]) => v !== null),
-    );
-
-    return UserProfileSchema.parse(result);
+    try {
+      const content = response.choices[0].message.content;
+    
+      const parsed = JSON.parse(content!);
+      
+      const result = Object.fromEntries(
+        Object.entries(parsed).filter(([_, v]) => v !== null),
+      );
+      
+      return UserProfileSchema.parse(result);
+    } catch (error) {
+      console.error(error);
+      return null;
+    }
   } else {
     return null;
   }

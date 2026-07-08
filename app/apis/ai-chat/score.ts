@@ -31,11 +31,12 @@ function scoreChair(profile: UserProfile, chair: Chair) {
 }
 
 export function recommendChairs(profile: UserProfile, chairs: any) {
-  return chairs.data.map((chair: any) => ({
+  console.log(chairs);
+  return chairs.map((chair: any) => ({
     ...chair,
-    score: scoreChair(profile, chair),
+    // score: scoreChair(profile, chair),
     role: "assistant",
   }))
-    .sort((a, b) => b.score - a.score)
-    .slice(0, 3);
+    // .sort((a, b) => b.score - a.score)
+    .slice(0, 5);
 }
