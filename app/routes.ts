@@ -15,6 +15,8 @@ export default [
     route("api/aichat", "apis/ai-chat/index.tsx"),
     route("api/aiproduct", "apis/ai-product-search/index.tsx"),
     route("api/aiproduct/search", "apis/ai-product-search/index-search-product.tsx"),
+    route("api/aiproduct/select", "apis/ai-product-search/index-select-product.tsx"),
+
     route("api/webhooks", "apis/webhook-server/index.tsx"),
   ]),
 

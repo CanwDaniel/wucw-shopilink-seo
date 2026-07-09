@@ -17,7 +17,6 @@ interface ConfirmDialogProps {
 }
 
 export default function VariantDialog({ show, setShow, onConfirm, cardData }: ConfirmDialogProps) {
-  console.log('dialog', cardData);
   return (
     <AlertDialog open={show} onOpenChange={setShow}>
       <AlertDialogContent>

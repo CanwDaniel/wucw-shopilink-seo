@@ -1,7 +1,7 @@
 import { prompt } from "./utils.js";
 import { CATALOG_URL } from "./search.js";
 
-async function getProductDetails(token, productId, selected = []) {
+export async function getProductDetails(token, productId, selected = []) {
   const res = await fetch(CATALOG_URL, {
     method: "POST",
     headers: {
@@ -50,7 +50,7 @@ function displayProduct(product) {
 async function pickVariant(token, productId, product) {
   try {
     const selected = Object.fromEntries((product.selected ?? []).map((s) => [s.name, s.label]));
-
+    
     if (product.options?.length) while (true) {
       const optionMap = [];
 
@@ -81,6 +81,7 @@ async function pickVariant(token, productId, product) {
 
       if (trimmed === "s") {
         const selectedArr = Object.entries(selected).map(([name, label]) => ({name, label}));
+        
         const details = await getProductDetails(token, productId, selectedArr);
         
         // 2. 明确根据用户选择的 selectedArr 去匹配具体的变体，而不是盲目取 [0]
@@ -116,7 +117,7 @@ export async function selectProduct(token, products) {
   const pick = await prompt(`\x1b[1m  Lookup details on a result [1-${products.length}]:\x1b[0m  `);
   const index = parseInt(pick) - 1;
   const selectedProduct = products[index];
-
+  
   const details = await getProductDetails(token, selectedProduct.id);
 
   const product = details?.product;

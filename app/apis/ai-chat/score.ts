@@ -31,7 +31,6 @@ function scoreChair(profile: UserProfile, chair: Chair) {
 }
 
 export function recommendChairs(profile: UserProfile, chairs: any) {
-  console.log(chairs);
   return chairs.map((chair: any) => ({
     ...chair,
     // score: scoreChair(profile, chair),

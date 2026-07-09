@@ -74,7 +74,7 @@ export async function action({ request }: Route.ActionArgs) {
     }
     
     const missing = getMissingFields(profile);
-    console.log("missing", missing);
+    
     if (missing.length > 0) {
       return handleResult(missing[0].message, session);
     }

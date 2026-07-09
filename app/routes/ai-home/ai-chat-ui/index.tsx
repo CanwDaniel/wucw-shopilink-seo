@@ -55,21 +55,63 @@ import { memo } from "react";
 
 import VariantDialog from './vairant-dialog';
 
-const CardItem = memo(({ data }) => {
+interface CardItemProps {
+  cData: any[]; // 声明 cData 必须是一个数组
+}
+
+const CardItem = memo(({ cData }: CardItemProps) => {
   const [ show, setShow ] = useState(false);
   const [ cardData, setCardData ] = useState({});
 
-  const handleCarouselItem = (card) => {
+  const handleCarouselItem = async (card: any) => {
+    // 获取产品卡片信息
+    const origin = window.location.origin;
+    
+    const res = await fetch(`${origin}/api/aiproduct/select`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        type: 'initProductData',
+        productId: card.id
+      })
+    }); 
+
+    const productData = await res.json();
+    
     setShow(!show);
-    setCardData(card);
+    setCardData(productData.data.product);
   };
 
-  function handleSubmitVariant(dialogData: any) {
-    console.log(dialogData);
+  const handleSubmitVariant = async (id: any) => {
+    const selectedArr = [
+      { name: 'Size', label: 'L' },
+      { name: 'Upholstery', label: 'Premium PVC Leather' },
+      { name: 'Color', label: 'Elegant Black' }
+    ]
+
+    // 获取购买链接并跳转
+    const res = await fetch(`${origin}/api/aiproduct/select`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        type: 'getCheckoutData',
+        productId: id,
+        selectedArr
+      })
+    });
+
+    const checkoutUrl = await res.json();
+    
+    console.log("checkoutUrl", checkoutUrl);
+
     setCardData({});
   };
 
-  return data.map((part, partIdx) => {
+  return cData.map((part, partIdx) => {
     if (part?.type === "data-recommendation") {
       const recommendation = part.data?.recommendation || [];
 
@@ -128,15 +170,15 @@ const CardItem = memo(({ data }) => {
   });
 });
 
-const ProductCard = memo(({ data }) => {
+const ProductCard = memo(({ data }: { data: any[] }) => {
   return (
     <div className="flex flex-col gap-4">
-      {data.length !== 0 ? <CardItem data={data} /> : "暂无数据"}
+      {data.length !== 0 ? <CardItem cData={ data }/> : "暂无数据"}
     </div>
   );
 });
 
-const RecommendCard = memo(({ data }) => {
+const RecommendCard = memo(({ data }: { data: any[] }) => {
   return (
     <>
       {data.map((message: any) => (
