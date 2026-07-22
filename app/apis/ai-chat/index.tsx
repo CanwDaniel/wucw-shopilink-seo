@@ -13,7 +13,7 @@ import { ServerApiFindProduct } from "server/ai-chat/product.api";
 
 import { extractProfile } from "./extract-profile";
 
-import { recommendChairs } from "./score";
+import { recommendChairs, explainRecommendation, explainCompare } from "./score";
 
 import { getMissingFields } from "./getMissingFields";
 
@@ -21,15 +21,18 @@ import { getSession, commitSession } from "./server";
 
 import { mergeProfile } from "./mergeProfile";
 
-import { createUIMessageStream, createUIMessageStreamResponse } from 'ai';
+import { createUIMessageStream, createUIMessageStreamResponse } from "ai";
 
-async function handleResult(recommendation, session) {
+import { generateConversation } from "./conversation";
+
+async function handleResult(recommendation: string, session: any, successRecommendation: object = {}) {
   const stream = createUIMessageStream({
     execute: ({ writer }) => {
       writer.write({
-        type: 'data-recommendation',  // 自定义数据类型
+        type: "data-recommendation", // 自定义数据类型
         data: {
           recommendation,
+          successRecommendation,
           success: true,
         },
       });
@@ -38,7 +41,7 @@ async function handleResult(recommendation, session) {
   return createUIMessageStreamResponse({
     stream,
     headers: {
-      'Set-Cookie': await commitSession(session),
+      "Set-Cookie": await commitSession(session),
     },
   });
 }
@@ -53,42 +56,74 @@ export async function action({ request }: Route.ActionArgs) {
   const lenght = bodyData?.messages.length - 1;
   const partlenght = bodyData?.messages[lenght]?.parts.length - 1;
   const chat = bodyData?.messages[lenght]?.parts[partlenght]?.text;
-  
+
   try {
     // todo: 这里需要通过shopify获取，但需要发送查询的条件
     // const chairs = await ServerApiFindProduct();
-    
+
     const session = await getSession(request.headers.get("Cookie"));
 
     const previousProfile = session.get("profile") ?? {};
 
     const extractedProfile = await extractProfile(`${chat}`);
-    
+
     // todo：合并之前已经整理的字段
     let profile;
-    
-    if(extractedProfile) {
+
+    if (extractedProfile) {
       profile = mergeProfile(previousProfile, extractedProfile);
 
       session.set("profile", profile);
     }
-    
+
     const missing = getMissingFields(profile);
-    
-    if (missing.length > 0) {
-      return handleResult(missing[0].message, session);
+
+    const conversation = generateConversation({
+      profile,
+      missingFields: missing,
+    });
+
+    switch (conversation.action) {
+      // TODO：收集字段
+      case "continue":
+        return handleResult(conversation.message, session);
+
+      // TODO：推荐产品
+      case "recommend":
+        // 通过提供的profile去查找符合的产品
+        const { origin } = new URL(request.url);
+
+        const chairs = await fetch(`${origin}/api/aiproduct/search`, {
+          method: "POST",
+        });
+
+        const chairsData = await chairs.json();
+
+        const products = recommendChairs(profile, chairsData);
+
+        const explanation = await explainRecommendation({profile, products});
+
+        return handleResult(products, session, { comprehension: conversation.message, explanation });
+
+        // const recommendation = recommendChairs(profile, chairsData);
+        // return handleResult(recommendation, session, conversation.message);
+
+      // TODO：比较
+      case "compare":
+        const { origin: cporigin } = new URL(request.url);
+
+        const cpchairs = await fetch(`${cporigin}/api/aiproduct/search`, {
+          method: "POST",
+        });
+
+        const cpchairsData = await cpchairs.json();
+
+        const cpproducts = recommendChairs(profile, cpchairsData);
+
+        const compare = await explainCompare({profile, products: cpproducts});
+
+        return handleResult(products, session, { comprehension: '', compare });
     }
-
-    // 通过提供的profile去查找符合的产品
-    const { origin } = new URL(request.url);
-
-    const chairs = await fetch(`${origin}/api/aiproduct/search`, { method: "POST" });
-
-    const chairsData = await chairs.json();
-    
-    const recommendation = recommendChairs(profile, chairsData);
-
-    return handleResult(recommendation, session);
   } catch (error) {
     console.log("error::", error);
   }

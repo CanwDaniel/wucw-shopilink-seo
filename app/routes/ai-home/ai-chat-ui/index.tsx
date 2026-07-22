@@ -114,45 +114,49 @@ const CardItem = memo(({ cData }: CardItemProps) => {
   return cData.map((part, partIdx) => {
     if (part?.type === "data-recommendation") {
       const recommendation = part.data?.recommendation || [];
-
+      
       return (
-        <div key={partIdx} className="flex justify-center">
-          {
-            Array.isArray(part.data?.recommendation) && recommendation.length > 0 ? (
-              <>
-                <Carousel className="w-full max-w-48 sm:max-w-xs md:max-w-sm">
-                  <CarouselContent className="ml-0">
-                    {recommendation.map((_, index) => (
-                      <CarouselItem key={_.id} className="basis-1/2 p-0 ml-4 cursor-pointer" onClick={() => handleCarouselItem(_)}>
-                        <div className="pt-1 pb-1">
-                          <Card className="pt-2 pb-2">
-                            <CardContent className="flex aspect-square items-center justify-center pl-2 pr-2">
-                              <CardDescription className="text-center">
-                                <img className="rounded-t-lg" src={_.media[0].url} alt={_.media[0].alt_text} />
-                                <p className="text-left">{_.title}</p>
-                                <p className="text-right mt-2">
-                                  <span className="mr-1">{_.price_range.min.amount}</span>
-                                  <span>{_.price_range.min.currency}</span>
-                                </p>
-                              </CardDescription>
-                            </CardContent>
-                          </Card>
-                        </div>
-                      </CarouselItem>
-                    ))}
-                  </CarouselContent>
-                  <CarouselPrevious className="cursor-pointer -left-10" />
-                  <CarouselNext className="cursor-pointer" />
-                </Carousel>
+        <div key={`${partIdx}-successRecommendation`}>
+          <p>{ part.data?.successRecommendation.comprehension }</p>
+          <div key={partIdx} className="flex justify-center">
+            {
+              Array.isArray(part.data?.recommendation) && recommendation.length > 0 ? (
+                <>
+                  <Carousel className="w-full max-w-48 sm:max-w-xs md:max-w-sm">
+                    <CarouselContent className="ml-0">
+                      {recommendation.map((_, index) => (
+                        <CarouselItem key={_.id} className="basis-1/2 p-0 ml-4 cursor-pointer" onClick={() => handleCarouselItem(_)}>
+                          <div className="pt-1 pb-1">
+                            <Card className="pt-2 pb-2">
+                              <CardContent className="flex aspect-square items-center justify-center pl-2 pr-2">
+                                <CardDescription className="text-center">
+                                  <img className="rounded-t-lg" src={_.media[0].url} alt={_.media[0].alt_text} />
+                                  <p className="text-left">{_.title}</p>
+                                  <p className="text-right mt-2">
+                                    <span className="mr-1">{_.price_range.min.amount}</span>
+                                    <span>{_.price_range.min.currency}</span>
+                                  </p>
+                                </CardDescription>
+                              </CardContent>
+                            </Card>
+                          </div>
+                        </CarouselItem>
+                      ))}
+                    </CarouselContent>
+                    <CarouselPrevious className="cursor-pointer -left-10" />
+                    <CarouselNext className="cursor-pointer" />
+                  </Carousel>
 
-                <VariantDialog show={ show } setShow={ setShow } onConfirm={ handleSubmitVariant } cardData={ cardData }/>
-              </>
-            ) : recommendation ? (
-              <div className="p-4 w-full text-sm text-muted-foreground leading-relaxed animate-fade-in">
-                <p>{String(recommendation)}</p>
-              </div>
-            ) : null
-          }
+                  <VariantDialog show={ show } setShow={ setShow } onConfirm={ handleSubmitVariant } cardData={ cardData }/>
+                </>
+              ) : recommendation ? (
+                <div className="p-4 w-full text-sm text-muted-foreground leading-relaxed animate-fade-in">
+                  <p>{String(recommendation)}</p>
+                </div>
+              ) : null
+            }
+          </div>
+          <p>{ part.data?.successRecommendation.explanation }</p>
         </div>
       );
     }

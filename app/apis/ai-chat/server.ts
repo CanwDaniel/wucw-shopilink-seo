@@ -3,7 +3,7 @@ import { createCookieSessionStorage } from "react-router";
 export const sessionStorage =
   createCookieSessionStorage({
     cookie: {
-      name: "__session",
+      name: "profile_session",
       secrets: ["123123"],
       sameSite: "lax",
       path: "/",
