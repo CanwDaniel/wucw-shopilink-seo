@@ -13,7 +13,7 @@ import { ServerApiFindProduct } from "server/ai-chat/product.api";
 
 import { extractProfile } from "./extract-profile";
 
-import { recommendChairs, explainRecommendation, explainCompare } from "./score";
+import { recommendChairs, explainRecommendation, explainCompare, findCompareProducts, compareProducts, extractCompareProducts } from "./score";
 
 import { getMissingFields } from "./getMissingFields";
 
@@ -56,6 +56,7 @@ export async function action({ request }: Route.ActionArgs) {
   const lenght = bodyData?.messages.length - 1;
   const partlenght = bodyData?.messages[lenght]?.parts.length - 1;
   const chat = bodyData?.messages[lenght]?.parts[partlenght]?.text;
+  const userMessage = { role:"user", content:String(chat) };
 
   try {
     // todo: 这里需要通过shopify获取，但需要发送查询的条件
@@ -65,7 +66,14 @@ export async function action({ request }: Route.ActionArgs) {
 
     const previousProfile = session.get("profile") ?? {};
 
-    const extractedProfile = await extractProfile(`${chat}`);
+    const previousMessages = session.get("messages") ?? [];
+
+    // const extractedProfile = await extractProfile(`${chat}`);
+
+    // TODO： 🌟🌟🌟🌟🌟这里还是要注意测试下，对于历史聊天还是不是很 intelligent
+    const extractedProfile = await extractProfile({ message: `${chat}`, history: previousMessages });
+
+    previousMessages.push(userMessage);
 
     // todo：合并之前已经整理的字段
     let profile;
@@ -81,11 +89,17 @@ export async function action({ request }: Route.ActionArgs) {
     const conversation = generateConversation({
       profile,
       missingFields: missing,
+      chat: String(chat)
     });
 
     switch (conversation.action) {
       // TODO：收集字段
       case "continue":
+        previousMessages.push({
+          role: "assistant",
+          content: conversation.message
+        });
+
         return handleResult(conversation.message, session);
 
       // TODO：推荐产品
@@ -103,13 +117,18 @@ export async function action({ request }: Route.ActionArgs) {
 
         const explanation = await explainRecommendation({profile, products});
 
+        previousMessages.push({
+          role: "assistant",
+          content: conversation.message
+        });
+
+        // TODO: 这里有点奇怪，ai提示的是直接去拿上一个产品，那不是还得自己去判断当前用户是不是在问上一个产品
+        // session.set("lastProducts", products);
+
         return handleResult(products, session, { comprehension: conversation.message, explanation });
 
-        // const recommendation = recommendChairs(profile, chairsData);
-        // return handleResult(recommendation, session, conversation.message);
-
       // TODO：比较
-      case "compare":
+      case "compare":        
         const { origin: cporigin } = new URL(request.url);
 
         const cpchairs = await fetch(`${cporigin}/api/aiproduct/search`, {
@@ -117,12 +136,30 @@ export async function action({ request }: Route.ActionArgs) {
         });
 
         const cpchairsData = await cpchairs.json();
-
+        
         const cpproducts = recommendChairs(profile, cpchairsData);
 
-        const compare = await explainCompare({profile, products: cpproducts});
+        const names = await extractCompareProducts(String(chat));
+        
+        const targetProducts = findCompareProducts({ names, products: cpproducts });
+        
+        const comparison = compareProducts({profile, products: targetProducts});
 
-        return handleResult(products, session, { comprehension: '', compare });
+        const data = {
+          profile,
+          products: [comparison.winner.product] as any
+        }
+        
+        const compare = await explainCompare(data);
+
+        // session.set("lastProducts", products);
+
+        previousMessages.push({
+          role: "assistant",
+          content: compare
+        });
+
+        return handleResult(data.products, session, { comprehension: '', comparison, compare });
     }
   } catch (error) {
     console.log("error::", error);

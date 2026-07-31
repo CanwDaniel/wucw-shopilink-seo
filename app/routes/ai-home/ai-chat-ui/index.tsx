@@ -111,20 +111,26 @@ const CardItem = memo(({ cData }: CardItemProps) => {
     setCardData({});
   };
 
-  return cData.map((part, partIdx) => {
+  return cData.map((part, partIdx) => { 
     if (part?.type === "data-recommendation") {
       const recommendation = part.data?.recommendation || [];
-      
+      let comprehension = part.data?.successRecommendation.comprehension || '';
+      let compare = part.data?.successRecommendation.compare || '';
+      let explanation = part.data?.successRecommendation.explanation || '';
+    
       return (
         <div key={`${partIdx}-successRecommendation`}>
-          <p>{ part.data?.successRecommendation.comprehension }</p>
+          { comprehension ? <p>{ comprehension }</p> : '' }
+
+          { compare ? <p>{ compare }</p> : '' }
+
           <div key={partIdx} className="flex justify-center">
             {
               Array.isArray(part.data?.recommendation) && recommendation.length > 0 ? (
                 <>
                   <Carousel className="w-full max-w-48 sm:max-w-xs md:max-w-sm">
                     <CarouselContent className="ml-0">
-                      {recommendation.map((_, index) => (
+                      {recommendation.map((_: any, index: number) => (
                         <CarouselItem key={_.id} className="basis-1/2 p-0 ml-4 cursor-pointer" onClick={() => handleCarouselItem(_)}>
                           <div className="pt-1 pb-1">
                             <Card className="pt-2 pb-2">
@@ -156,7 +162,8 @@ const CardItem = memo(({ cData }: CardItemProps) => {
               ) : null
             }
           </div>
-          <p>{ part.data?.successRecommendation.explanation }</p>
+          
+          { explanation ? <p>{ explanation }</p> : '' }
         </div>
       );
     }

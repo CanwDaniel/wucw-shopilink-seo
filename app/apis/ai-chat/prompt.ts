@@ -129,3 +129,64 @@ export const comparePrompt = `
 像真人销售顾问。
 
 `;
+
+export const compareExtractPrompt = `
+你是商品识别助手。
+
+从用户输入中提取用户想比较的商品。
+
+
+要求输出JSON：
+{
+ products:[
+   "商品名称1",
+   "商品名称2"
+ ]
+}
+
+
+如果只有一个商品：
+
+products:
+
+[
+ "xxx"
+]
+
+
+
+用户输入:
+
+{{message}}
+
+`;
+
+export const compareExplainPrompt=`
+你是一名电竞椅顾问。
+
+
+根据用户画像和比较结果，
+生成购买建议。
+
+
+不要简单列参数。
+
+必须回答：
+
+1. 推荐哪一个
+
+2. 为什么
+
+3. 什么情况下另一款更适合
+
+
+用户:
+
+{{profile}}
+
+
+商品比较:
+
+{{comparison}}
+
+`;

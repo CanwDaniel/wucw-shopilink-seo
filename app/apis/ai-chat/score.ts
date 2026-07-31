@@ -1,5 +1,5 @@
 import OpenAI from "openai";
-import { recommendationExplainPrompt, comparePrompt } from "./prompt";
+import { recommendationExplainPrompt, comparePrompt, compareExtractPrompt } from "./prompt";
 
 type UserProfile = {
   budget?: number;
@@ -50,12 +50,15 @@ export function recommendChairs(profile: UserProfile, chairs: any) {
 // TODO: explainRecommendation
 export async function explainRecommendation({profile, products }: {profile: any; products: any[]}) {
   const client = new OpenAI({
-    apiKey: process.env.GLM_API_KEY,
-    baseURL: "https://open.bigmodel.cn/api/paas/v4",
+    apiKey: process.env.SENSENOVA_API_KEY,
+    // apiKey: process.env.GLM_API_KEY,
+    baseURL: "https://token.sensenova.cn/v1",
+    // baseURL: "https://open.bigmodel.cn/api/paas/v4",
   });
 
   const response = await client.chat.completions.create({
-    model: "glm-4-flash",
+    model: "sensenova-6.7-flash-lite",
+    // model: "glm-4-flash",
 
     response_format: { type: "json_object" },
 
@@ -77,27 +80,40 @@ export async function explainRecommendation({profile, products }: {profile: any;
 // TODO: compareProducts
 export function compareProducts({profile,products}: {profile: any;products: any[]}) {
   const result = products.map((product) => {
+    let reasons=[];
     let score = 0;
 
     if (profile.dailyHours >= 8) {
       if (product.lumbarSupport) {
         score += 3;
+        reasons.push("适合长时间久坐");
       }
     }
 
     if (profile.usage === "programming") {
       if (product.material === "mesh") {
         score += 2;
+        reasons.push("透气性更适合办公");
+      }
+    }
+
+    if(profile.usage==="gaming") {
+      if(product.headrest) {
+        score += 2;
+        reasons.push(
+          "包裹感更适合游戏体验"
+        );
       }
     }
 
     return {
-      ...product,
-      compareScore: score,
+      product,
+      score,
+      reasons
     };
   });
 
-  const sorted = result.sort((a, b) => b.compareScore - a.compareScore);
+  const sorted = result.sort((a, b) => b.score - a.score);
 
   return {
     winner: sorted[0],
@@ -105,14 +121,17 @@ export function compareProducts({profile,products}: {profile: any;products: any[
   };
 }
 
-export async function explainCompare({profile, products}: {profile: any;products: any[]}) {
+export async function explainCompare({profile, products}: {profile: any; products: any[]}) {
   const client = new OpenAI({
-    apiKey: process.env.GLM_API_KEY,
-    baseURL: "https://open.bigmodel.cn/api/paas/v4",
+    apiKey: process.env.SENSENOVA_API_KEY,
+    // apiKey: process.env.GLM_API_KEY,
+    baseURL: "https://token.sensenova.cn/v1",
+    // baseURL: "https://open.bigmodel.cn/api/paas/v4",
   });
 
   const response = await client.chat.completions.create({
-    model: "glm-4-flash",
+    model: "sensenova-6.7-flash-lite",
+    // model: "glm-4-flash",
 
     response_format: { type: "json_object" },
 
@@ -127,6 +146,43 @@ export async function explainCompare({profile, products}: {profile: any;products
       },
     ],
   });
-
+  
   return response.choices[0].message.content;
+}
+
+// TODO: findCompareProducts
+export function findCompareProducts({names, products}:{names: string[], products: any[]}) {
+  return products.filter(product => {
+    return names.some(name => product.title.toLowerCase().includes(name.toLowerCase()))
+  })
+};
+
+// TODO: extractCompareProducts
+export async function extractCompareProducts(chat:string) {
+  const client = new OpenAI({
+    apiKey: process.env.SENSENOVA_API_KEY,
+    // apiKey: process.env.GLM_API_KEY,
+    baseURL: "https://token.sensenova.cn/v1",
+    // baseURL: "https://open.bigmodel.cn/api/paas/v4",
+  });
+
+  const response = await client.chat.completions.create({
+    model: "sensenova-6.7-flash-lite",
+    // model: "glm-4-flash",
+
+    response_format: { type: "json_object" },
+
+    messages: [
+      {
+        role: "system",
+        content: compareExtractPrompt,
+      },
+      {
+        role: "user",
+        content: chat,
+      },
+    ],
+  });
+  
+  return JSON.parse(response.choices[0].message.content || '')?.products || [];
 }

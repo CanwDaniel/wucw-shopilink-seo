@@ -7,18 +7,25 @@ import { UserProfileSchema } from "./profile-schema";
 import { extractProfilePrompt } from "./prompt";
 
 const client = new OpenAI({
-  // apiKey: process.env.SENSENOVA_API_KEY,
-  apiKey: process.env.GLM_API_KEY,
+  apiKey: process.env.SENSENOVA_API_KEY,
+  // apiKey: process.env.GLM_API_KEY,
 
-  // baseURL: "https://token.sensenova.cn/v1",
-  baseURL: "https://open.bigmodel.cn/api/paas/v4",
+  baseURL: "https://token.sensenova.cn/v1",
+  // baseURL: "https://open.bigmodel.cn/api/paas/v4",
 });
 
 //TODO: 自然语言 -> ai通过prompts理解 -> 结构化JSON -> Zod 校验
-export async function extractProfile(message: string) {
+//TODO: 自然聊天 -> 用户画像 -> 推荐 -> 推荐解释 -> 商品比较
+//TODO: 自然聊天 -> extract-profile -> mergeProfile -> conversation -> recommendation/compare
+export async function extractProfile({ message, history }: { message: string, history: [] }) {
+  const msg = {
+    message,
+    history
+  };
+
   const response = await client.chat.completions.create({
-    // model: "sensenova-6.7-flash-lite",
-    model: "glm-4-flash",
+    model: "sensenova-6.7-flash-lite",
+    // model: "glm-4-flash",
 
     response_format: {
       type: "json_object",
@@ -31,7 +38,7 @@ export async function extractProfile(message: string) {
       },
       {
         role: "user",
-        content: message,
+        content: JSON.stringify(msg),
       },
     ],
   });

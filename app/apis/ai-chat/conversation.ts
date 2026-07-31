@@ -1,3 +1,5 @@
+import type { AIResponse } from './profile-schema';
+
 type Profile = {
   budget?: number;
   dailyHours?: number;
@@ -6,18 +8,23 @@ type Profile = {
 
 type ConversationState = "collecting" | "ready" | "recommending";
 
-type ConversationResult = {
-  message: string;
-  action: "continue" | "recommend" | "compare";
-};
-
 type GenerateConversationParams = {
   profile: Profile;
   missingFields: string[];
+  chat: string;
 };
 
-function detectIntent(message: string) {
-  if (message.includes("哪个好") || message.includes("区别") || message.includes("比较")) {
+function detectIntent(chat:string) {
+  const compareWords=[
+    "比较",
+    "哪个好",
+    "区别",
+    "差别",
+    "哪个适合",
+    "哪个好用"
+  ];
+
+  if(compareWords.some(word => chat.includes(word))){
     return "compare";
   }
 
@@ -44,17 +51,19 @@ function getConversationState(missingFields: string[]): ConversationState {
   return "collecting";
 }
 
-export function generateConversation({profile, missingFields}: GenerateConversationParams): ConversationResult {
-  const state = getConversationState(missingFields);
-  const intent = detectIntent('哪个好');
+export function generateConversation({profile, missingFields, chat}: GenerateConversationParams): AIResponse {
+  const intent = detectIntent(chat);
 
   // 信息对比
-  if(intent === "compare"){
+  if(intent === "compare") {
     return {
       message: "我帮你从你的使用场景分析一下这两款的区别。",
-      action: "compare"
+      action: "compare",
+      profile
     }
   }
+  
+  const state = getConversationState(missingFields);
 
   // 信息收集阶段
   if (missingFields.includes("usage")) {
