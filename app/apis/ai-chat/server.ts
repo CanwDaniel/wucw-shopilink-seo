@@ -4,10 +4,11 @@ export const sessionStorage =
   createCookieSessionStorage({
     cookie: {
       name: "profile_session",
-      secrets: ["123123"],
+      secrets: [process.env.SESSION_SECRET!],
       sameSite: "lax",
       path: "/",
       httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
     },
   });
 

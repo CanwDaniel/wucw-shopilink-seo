@@ -191,7 +191,7 @@ export type AisearchlogGroupByArgs<ExtArgs extends runtime.Types.Extensions.Inte
 
 export type AisearchlogGroupByOutputType = {
   id: string
-  query: string
+  query: string | null
   keyword: string
   minPrice: number | null
   maxPrice: number | null
@@ -223,7 +223,7 @@ export type AisearchlogWhereInput = {
   OR?: Prisma.AisearchlogWhereInput[]
   NOT?: Prisma.AisearchlogWhereInput | Prisma.AisearchlogWhereInput[]
   id?: Prisma.StringFilter<"Aisearchlog"> | string
-  query?: Prisma.StringFilter<"Aisearchlog"> | string
+  query?: Prisma.StringNullableFilter<"Aisearchlog"> | string | null
   keyword?: Prisma.StringFilter<"Aisearchlog"> | string
   minPrice?: Prisma.FloatNullableFilter<"Aisearchlog"> | number | null
   maxPrice?: Prisma.FloatNullableFilter<"Aisearchlog"> | number | null
@@ -232,7 +232,7 @@ export type AisearchlogWhereInput = {
 
 export type AisearchlogOrderByWithRelationInput = {
   id?: Prisma.SortOrder
-  query?: Prisma.SortOrder
+  query?: Prisma.SortOrderInput | Prisma.SortOrder
   keyword?: Prisma.SortOrder
   minPrice?: Prisma.SortOrderInput | Prisma.SortOrder
   maxPrice?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -244,7 +244,7 @@ export type AisearchlogWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.AisearchlogWhereInput | Prisma.AisearchlogWhereInput[]
   OR?: Prisma.AisearchlogWhereInput[]
   NOT?: Prisma.AisearchlogWhereInput | Prisma.AisearchlogWhereInput[]
-  query?: Prisma.StringFilter<"Aisearchlog"> | string
+  query?: Prisma.StringNullableFilter<"Aisearchlog"> | string | null
   keyword?: Prisma.StringFilter<"Aisearchlog"> | string
   minPrice?: Prisma.FloatNullableFilter<"Aisearchlog"> | number | null
   maxPrice?: Prisma.FloatNullableFilter<"Aisearchlog"> | number | null
@@ -253,7 +253,7 @@ export type AisearchlogWhereUniqueInput = Prisma.AtLeast<{
 
 export type AisearchlogOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
-  query?: Prisma.SortOrder
+  query?: Prisma.SortOrderInput | Prisma.SortOrder
   keyword?: Prisma.SortOrder
   minPrice?: Prisma.SortOrderInput | Prisma.SortOrder
   maxPrice?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -270,7 +270,7 @@ export type AisearchlogScalarWhereWithAggregatesInput = {
   OR?: Prisma.AisearchlogScalarWhereWithAggregatesInput[]
   NOT?: Prisma.AisearchlogScalarWhereWithAggregatesInput | Prisma.AisearchlogScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"Aisearchlog"> | string
-  query?: Prisma.StringWithAggregatesFilter<"Aisearchlog"> | string
+  query?: Prisma.StringNullableWithAggregatesFilter<"Aisearchlog"> | string | null
   keyword?: Prisma.StringWithAggregatesFilter<"Aisearchlog"> | string
   minPrice?: Prisma.FloatNullableWithAggregatesFilter<"Aisearchlog"> | number | null
   maxPrice?: Prisma.FloatNullableWithAggregatesFilter<"Aisearchlog"> | number | null
@@ -279,7 +279,7 @@ export type AisearchlogScalarWhereWithAggregatesInput = {
 
 export type AisearchlogCreateInput = {
   id?: string
-  query: string
+  query?: string | null
   keyword: string
   minPrice?: number | null
   maxPrice?: number | null
@@ -288,7 +288,7 @@ export type AisearchlogCreateInput = {
 
 export type AisearchlogUncheckedCreateInput = {
   id?: string
-  query: string
+  query?: string | null
   keyword: string
   minPrice?: number | null
   maxPrice?: number | null
@@ -297,7 +297,7 @@ export type AisearchlogUncheckedCreateInput = {
 
 export type AisearchlogUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  query?: Prisma.StringFieldUpdateOperationsInput | string
+  query?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   keyword?: Prisma.StringFieldUpdateOperationsInput | string
   minPrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   maxPrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -306,7 +306,7 @@ export type AisearchlogUpdateInput = {
 
 export type AisearchlogUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  query?: Prisma.StringFieldUpdateOperationsInput | string
+  query?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   keyword?: Prisma.StringFieldUpdateOperationsInput | string
   minPrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   maxPrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -315,7 +315,7 @@ export type AisearchlogUncheckedUpdateInput = {
 
 export type AisearchlogCreateManyInput = {
   id?: string
-  query: string
+  query?: string | null
   keyword: string
   minPrice?: number | null
   maxPrice?: number | null
@@ -324,7 +324,7 @@ export type AisearchlogCreateManyInput = {
 
 export type AisearchlogUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  query?: Prisma.StringFieldUpdateOperationsInput | string
+  query?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   keyword?: Prisma.StringFieldUpdateOperationsInput | string
   minPrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   maxPrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -333,7 +333,7 @@ export type AisearchlogUpdateManyMutationInput = {
 
 export type AisearchlogUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  query?: Prisma.StringFieldUpdateOperationsInput | string
+  query?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   keyword?: Prisma.StringFieldUpdateOperationsInput | string
   minPrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   maxPrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -379,6 +379,10 @@ export type AisearchlogSumOrderByAggregateInput = {
 
 export type StringFieldUpdateOperationsInput = {
   set?: string
+}
+
+export type NullableStringFieldUpdateOperationsInput = {
+  set?: string | null
 }
 
 export type NullableFloatFieldUpdateOperationsInput = {
@@ -438,7 +442,7 @@ export type $AisearchlogPayload<ExtArgs extends runtime.Types.Extensions.Interna
   objects: {}
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
-    query: string
+    query: string | null
     keyword: string
     minPrice: number | null
     maxPrice: number | null

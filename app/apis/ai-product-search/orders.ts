@@ -1,8 +1,8 @@
 import { getMcpEndpoint } from './mcp.js';
 import crypto from 'node:crypto';
 
-// const AGENT_PROFILE = 'https://shopify.dev/ucp/agent-profiles/examples/2026-04-08/valid-with-capabilities.json';
-const AGENT_PROFILE = 'https://wucw.top/cart-and-checkout.json';
+const AGENT_PROFILE = 'https://shopify.dev/ucp/agent-profiles/examples/2026-04-08/cart-and-checkout.json';
+// const AGENT_PROFILE = 'https://ucp-agent-json-git-main-daniel-x.vercel.app/cart-and-checkout.json';
 
 export async function getOrderAccessToken() {
   const clientId = process.env.CLIENT_ID;

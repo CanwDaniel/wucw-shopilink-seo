@@ -4,6 +4,12 @@ export type AIAction = "continue" | "recommend" | "compare";
 
 export type ChatMessage = { role: "user" | "assistant"; content: string };
 
+export type ReferenceResolution = {
+  type: "none" | "product" | "products" | "comparison";
+  productIds?: string[];
+  reason?: string;
+}
+
 export type AIResponse = {
   message: string;
   action: AIAction;

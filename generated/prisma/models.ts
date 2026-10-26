@@ -9,6 +9,9 @@
  * 🟢 You can import this file directly.
  */
 export type * from './models/Aisearchlog'
+export type * from './models/ChatSession'
+export type * from './models/ChatMessage'
+export type * from './models/ChatProduct'
 export type * from './models/Product'
 export type * from './models/User'
 export type * from './models/Auth'

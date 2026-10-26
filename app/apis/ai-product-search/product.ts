@@ -2,6 +2,17 @@ import { prompt } from "./utils.js";
 import { CATALOG_URL } from "./search.js";
 
 export async function getProductDetails(token, productId, selected = []) {
+  // 前端若误传 JSON 字符串，这里兜底解析成数组
+  let selectedOptions = selected;
+  if (typeof selectedOptions === "string") {
+    try {
+      selectedOptions = JSON.parse(selectedOptions);
+    } catch {
+      selectedOptions = [];
+    }
+  }
+  if (!Array.isArray(selectedOptions)) selectedOptions = [];
+
   const res = await fetch(CATALOG_URL, {
     method: "POST",
     headers: {
@@ -23,14 +34,18 @@ export async function getProductDetails(token, productId, selected = []) {
           },
           catalog: {
             id: productId,
-            ...(selected.length ? { selected } : {}),
+            ...(selectedOptions.length ? { selected: selectedOptions } : {}),
           },
         },
       },
     }),
   });
   const data = await res.json();
-  
+
+  if (data.result?.isError || !data.result?.structuredContent) {
+    console.error("getProductDetails failed:", data.result?.content?.[0]?.text ?? data.error);
+  }
+
   return data.result?.structuredContent ?? null;
 }
 

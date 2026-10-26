@@ -1,0 +1,29 @@
+model ChatSession {
+  id        String        @id @default(cuid())
+  profile   Json?
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+  messages  ChatMessage[]
+  products  ChatProduct[]
+}
+
+model ChatMessage {
+  id String @id @default(cuid())
+  sessionId String
+  role String
+  content String
+  createdAt DateTime @default(now())
+  session ChatSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  
+  @@index([sessionId])
+}
+
+model ChatProduct {
+  id String @id @default(cuid())
+  sessionId String
+  product Json
+  createdAt DateTime @default(now())
+  session ChatSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  
+  @@index([sessionId])
+}

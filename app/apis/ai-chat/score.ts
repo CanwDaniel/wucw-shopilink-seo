@@ -57,7 +57,7 @@ export async function explainRecommendation({profile, products }: {profile: any;
   });
 
   const response = await client.chat.completions.create({
-    model: "sensenova-6.7-flash-lite",
+    model: "sensenova-6.8-flash-lite",
     // model: "glm-4-flash",
 
     response_format: { type: "json_object" },
@@ -130,7 +130,7 @@ export async function explainCompare({profile, products}: {profile: any; product
   });
 
   const response = await client.chat.completions.create({
-    model: "sensenova-6.7-flash-lite",
+    model: "sensenova-6.8-flash-lite",
     // model: "glm-4-flash",
 
     response_format: { type: "json_object" },
@@ -167,7 +167,7 @@ export async function extractCompareProducts(chat:string) {
   });
 
   const response = await client.chat.completions.create({
-    model: "sensenova-6.7-flash-lite",
+    model: "sensenova-6.8-flash-lite",
     // model: "glm-4-flash",
 
     response_format: { type: "json_object" },

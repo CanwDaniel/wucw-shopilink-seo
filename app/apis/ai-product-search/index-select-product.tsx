@@ -41,9 +41,9 @@ async function getCheckoutUrl({ productId, selectedArr, buyerIp }: PramsData) {
   const token = process.env.SHOPIFY_ADMIN_ACCESS_TOKEN;
   
   const details = await getProductDetails(token, productId, selectedArr);
-
+  console.log('😀', details);
   const variant = details?.product?.variants?.[0];
-
+  
   if (!variant) {
     return {
       success: false,
@@ -52,10 +52,10 @@ async function getCheckoutUrl({ productId, selectedArr, buyerIp }: PramsData) {
   }
 
   const { id: variantId, checkout_url: checkoutUrl } = variant;
-  
+
   try {
     const cartId = await createCart(variantId, checkoutUrl, buyerIp);
-
+    
     const cartLineItems = await getCart(cartId, checkoutUrl, buyerIp);
     
     const checkoutId = await createCheckout(token, cartId, checkoutUrl, buyerIp, cartLineItems.line_items);
@@ -80,8 +80,9 @@ export async function action({ request }: Route.ActionArgs) {
   const buyerIp = request.headers.get("X-Forwarded-For")?.split(",")[0].trim() || request.headers.get("X-Real-IP") || "127.0.0.1";
 
   // 获取产品详情 getProductDetails
-  const { type, productId, selectedArr } = await request.json();
-  
+  const response = await request.json();
+
+  const { type, productId, selectedArr } = response;
   if(type === 'initProductData') {
     return getProduct(`${productId}`).catch(err => console.error('Request failed:', err));
   } 

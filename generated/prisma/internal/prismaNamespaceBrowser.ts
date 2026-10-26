@@ -52,6 +52,9 @@ export const AnyNull = runtime.AnyNull
 
 export const ModelName = {
   Aisearchlog: 'Aisearchlog',
+  ChatSession: 'ChatSession',
+  ChatMessage: 'ChatMessage',
+  ChatProduct: 'ChatProduct',
   Product: 'Product',
   User: 'User',
   Auth: 'Auth'
@@ -83,6 +86,37 @@ export const AisearchlogScalarFieldEnum = {
 } as const
 
 export type AisearchlogScalarFieldEnum = (typeof AisearchlogScalarFieldEnum)[keyof typeof AisearchlogScalarFieldEnum]
+
+
+export const ChatSessionScalarFieldEnum = {
+  id: 'id',
+  profile: 'profile',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ChatSessionScalarFieldEnum = (typeof ChatSessionScalarFieldEnum)[keyof typeof ChatSessionScalarFieldEnum]
+
+
+export const ChatMessageScalarFieldEnum = {
+  id: 'id',
+  sessionId: 'sessionId',
+  role: 'role',
+  content: 'content',
+  createdAt: 'createdAt'
+} as const
+
+export type ChatMessageScalarFieldEnum = (typeof ChatMessageScalarFieldEnum)[keyof typeof ChatMessageScalarFieldEnum]
+
+
+export const ChatProductScalarFieldEnum = {
+  id: 'id',
+  sessionId: 'sessionId',
+  product: 'product',
+  createdAt: 'createdAt'
+} as const
+
+export type ChatProductScalarFieldEnum = (typeof ChatProductScalarFieldEnum)[keyof typeof ChatProductScalarFieldEnum]
 
 
 export const ProductScalarFieldEnum = {
@@ -127,6 +161,21 @@ export const SortOrder = {
 export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
 
 
+export const NullableJsonNullValueInput = {
+  DbNull: DbNull,
+  JsonNull: JsonNull
+} as const
+
+export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
+
+
+export const JsonNullValueInput = {
+  JsonNull: JsonNull
+} as const
+
+export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
+
+
 export const QueryMode = {
   default: 'default',
   insensitive: 'insensitive'
@@ -141,4 +190,13 @@ export const NullsOrder = {
 } as const
 
 export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
+
+
+export const JsonNullValueFilter = {
+  DbNull: DbNull,
+  JsonNull: JsonNull,
+  AnyNull: AnyNull
+} as const
+
+export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
 

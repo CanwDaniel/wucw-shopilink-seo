@@ -24,7 +24,7 @@ export async function extractProfile({ message, history }: { message: string, hi
   };
 
   const response = await client.chat.completions.create({
-    model: "sensenova-6.7-flash-lite",
+    model: "sensenova-6.8-flash-lite",
     // model: "glm-4-flash",
 
     response_format: {

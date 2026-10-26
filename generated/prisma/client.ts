@@ -47,6 +47,21 @@ export { Prisma }
  */
 export type Aisearchlog = Prisma.AisearchlogModel
 /**
+ * Model ChatSession
+ * 
+ */
+export type ChatSession = Prisma.ChatSessionModel
+/**
+ * Model ChatMessage
+ * 
+ */
+export type ChatMessage = Prisma.ChatMessageModel
+/**
+ * Model ChatProduct
+ * 
+ */
+export type ChatProduct = Prisma.ChatProductModel
+/**
  * Model Product
  * 
  */

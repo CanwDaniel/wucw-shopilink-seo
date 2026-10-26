@@ -1,8 +1,8 @@
 import { getMcpEndpoint } from './mcp.js';
 
-// const AGENT_PROFILE = 'https://shopify.dev/ucp/agent-profiles/examples/2026-04-08/cart-and-checkout.json';
+const AGENT_PROFILE = 'https://shopify.dev/ucp/agent-profiles/examples/2026-04-08/cart-and-checkout.json';
 // const AGENT_PROFILE = 'https://ucp-agent-json.vercel.app/cart-and-checkout.json';
-const AGENT_PROFILE = 'https://wucw.top/cart-and-checkout.json';
+// const AGENT_PROFILE = 'https://ucp-agent-json-git-main-daniel-x.vercel.app/cart-and-checkout.json';
 
 export async function createCart(variantId, checkoutUrl, buyerIp) {
   const origin = new URL(checkoutUrl).origin;
@@ -31,7 +31,7 @@ export async function createCart(variantId, checkoutUrl, buyerIp) {
   });
   
   const data = await res.json();
-  
+
   if (data?.result?.content?.[0]?.text) {
     data.result.content[0].text = JSON.parse(data.result.content[0].text);
   }
@@ -45,7 +45,7 @@ export async function createCart(variantId, checkoutUrl, buyerIp) {
   console.log('\n── Create Cart ────────────────────────────────────\n');
   console.log(`  Cart ID:  ${cart.id}`);
   console.log(`  Total:    $${(total / 100).toFixed(2)}`);
-
+  
   return cart.id;
 }
 

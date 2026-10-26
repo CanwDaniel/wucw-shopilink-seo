@@ -62,6 +62,7 @@ interface CardItemProps {
 const CardItem = memo(({ cData }: CardItemProps) => {
   const [ show, setShow ] = useState(false);
   const [ cardData, setCardData ] = useState({});
+  const origin = typeof window !== 'undefined' ? window.location.origin : '';
 
   const handleCarouselItem = async (card: any) => {
     // 获取产品卡片信息
@@ -90,7 +91,7 @@ const CardItem = memo(({ cData }: CardItemProps) => {
       { name: 'Upholstery', label: 'Premium PVC Leather' },
       { name: 'Color', label: 'Elegant Black' }
     ]
-
+    
     // 获取购买链接并跳转
     const res = await fetch(`${origin}/api/aiproduct/select`, {
       method: "POST",
@@ -103,7 +104,7 @@ const CardItem = memo(({ cData }: CardItemProps) => {
         selectedArr
       })
     });
-
+    
     const checkoutUrl = await res.json();
     
     console.log("checkoutUrl", checkoutUrl);
