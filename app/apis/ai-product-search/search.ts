@@ -2,7 +2,8 @@ import { getMcpEndpoint } from './mcp.js';
 
 // export const CATALOG_URL = 'https://catalog.shopify.com/api/ucp/mcp';
 // TODO myshopify
-export const CATALOG_URL = await getMcpEndpoint(`https://${process.env.SHOP_ORIGIN}`);
+const origin = `https://${process.env.SHOP_ORIGIN}`;
+export const CATALOG_URL = await getMcpEndpoint(origin);
 
 export function showCatalog() {
   console.log('\n── 2. Search the Catalog ─────────────────────────\n');
